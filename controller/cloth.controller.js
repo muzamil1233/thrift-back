@@ -12,6 +12,11 @@ export const AddClothes = async (req, res) => {
       color,
       material,
       price,
+      originalPrice,  // ✅ new
+      discount,       // ✅ new (optional, auto-calculated in schema)
+      rating,         // ✅ new
+      offer,          // ✅ new
+      badge,          // ✅ new
       stock,
       brand,
       description,
@@ -19,18 +24,13 @@ export const AddClothes = async (req, res) => {
     } = req.body;
 
     let imageUrls = [];
-
-    // If frontend sends any image URLs (optional)
     if (req.body.images) {
       if (Array.isArray(req.body.images)) imageUrls = req.body.images;
       else imageUrls = [req.body.images];
     }
-
-    // Add uploaded files (local)
     if (req.files && req.files.length > 0) {
-      // const localPaths = req.files.map((file) => `/uploads/${file.filename}`);
       const localPaths = req.files.map((file) => file.path);
-      imageUrls = [...imageUrls, ...localPaths]; // merge
+      imageUrls = [...imageUrls, ...localPaths];
     }
 
     const clothes = new Clothes({
@@ -41,18 +41,23 @@ export const AddClothes = async (req, res) => {
       color,
       material,
       price,
+      originalPrice,  // ✅ new
+      discount,       // ✅ new
+      rating,         // ✅ new
+      offer,          // ✅ new
+      badge,          // ✅ new
       stock,
       brand,
       description,
-      images: imageUrls, // ✅ actually save the image URLs
+      images: imageUrls,
       isFeatured,
     });
 
     await clothes.save();
 
     return res.status(200).json({
-      msg: "added succesfully",
-      data: clothes, // ✅ return the saved data with images
+      msg: "added successfully",
+      data: clothes,
     });
   } catch (error) {
     console.error("Error at AddClothes:", error);
