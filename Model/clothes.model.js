@@ -3,34 +3,48 @@ import mongoose from "mongoose";
 const clothesSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true, // e.g., "Men's T-Shirt"
+    required: true,
     trim: true
   },
   category: {
     type: String,
-    enum: ["Men", "Women", "Kids",],
-    // enum: ["Machine", "Hand Tilla", "Aari Work", "Others"],
-
+    enum: ["Men", "Women", "Kids"],
     required: true
   },
   type: {
     type: String,
-    required: true, // e.g., "Shirt", "Jeans", "Jacket"
+    required: true,
   },
   size: {
-    type: [String], // e.g., ["S", "M", "L", "XL"]
+    type: [String],
     default: []
   },
   color: {
-    type: [String], // e.g., ["Red", "Black", "Blue"]
+    type: [String],
     default: []
   },
   material: {
-    type: String, // e.g., "Cotton", "Polyester"
+    type: String,
   },
   price: {
     type: Number,
     required: true
+  },
+  originalPrice: {
+    type: Number,   // ✅ MRP / crossed out price
+  },
+  discount: {
+    type: Number,   // ✅ percentage e.g. 50 means 50% OFF
+  },
+  rating: {
+    type: Number,
+    default: 4.5    // ✅ star rating
+  },
+  offer: {
+    type: String,   // ✅ e.g. "Buy 2 for 1199"
+  },
+  badge: {
+    type: String,   // ✅ e.g. "OVERSIZED FIT"
   },
   stock: {
     type: Number,
@@ -43,7 +57,7 @@ const clothesSchema = new mongoose.Schema({
     type: String
   },
   images: {
-    type: [String], // URLs of images
+    type: [String],
     default: []
   },
   isFeatured: {
@@ -54,6 +68,16 @@ const clothesSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   }
+});
+
+// Auto-calculate discount from price and originalPrice if not provided
+clothesSchema.pre("save", function (next) {
+  if (this.originalPrice && this.price && !this.discount) {
+    this.discount = Math.round(
+      ((this.originalPrice - this.price) / this.originalPrice) * 100
+    );
+  }
+  next();
 });
 
 const Clothes = mongoose.model("Clothes", clothesSchema);
