@@ -97,32 +97,29 @@ export const deleteClothes = async(req,res)=>{
 export const editCloth = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log("🧾 Edit request received for ID:", id);
 
     if (!id) return res.status(400).json({ msg: "ID is required" });
     if (!mongoose.Types.ObjectId.isValid(id)) return res.status(400).json({ msg: "Invalid ID format" });
 
-    // ✅ Start with existing images sent from frontend
     let imageUrls = [];
 
-    // if (req.body.existingImages) {
-    //   imageUrls = Array.isArray(req.body.existingImages)
-    //     ? req.body.existingImages
-    //     : [req.body.existingImages];
-    // }
+    // ✅ UNCOMMENT THIS - keep existing images
+    if (req.body.existingImages) {
+      imageUrls = Array.isArray(req.body.existingImages)
+        ? req.body.existingImages
+        : [req.body.existingImages];
+    }
 
-    // ✅ Add newly uploaded images on top
+    // ✅ Add newly uploaded images
     if (req.files && req.files.length > 0) {
-      // const newImages = req.files.map((file) => `/uploads/${file.filename}`);
       const newImages = req.files.map((file) => file.path);
       imageUrls = [...imageUrls, ...newImages];
     }
 
-    // ✅ Remove existingImages from body to avoid saving it as a field
     const { existingImages, ...restBody } = req.body;
 
     const updateData = {
-      ...restBody,
+      ...restBody,  // ✅ this spreads originalPrice, rating, offer, badge etc.
       images: imageUrls,
     };
 
@@ -132,8 +129,6 @@ export const editCloth = async (req, res) => {
     });
 
     if (!updatedCloth) return res.status(404).json({ msg: "Cloth not found" });
-
-    console.log("✅ Cloth updated:", updatedCloth);
 
     return res.status(200).json({
       msg: "Clothes updated successfully",
