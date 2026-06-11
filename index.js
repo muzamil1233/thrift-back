@@ -33,6 +33,7 @@ import Adminrouter from './Route/AuthAdmin.route.js';
 import Bagrouter from './Route/Bag.route.js';
 import Emailrouter from './Route/mailExport.route.js';
 import Razorpayrouter from './Route/razorpay.route.js';
+import Orderrouter from './Route/Orderrouter.route.js';
 // import cookieParser from 'cookie-parser'
 
 
@@ -57,6 +58,7 @@ app.use("/api/Admin", Adminrouter);
 app.use("/api/Bag", Bagrouter);
 app.use("/api/query", Emailrouter)
 app.use("/api/payment", Razorpayrouter);
+app.use("/api/orders", Orderrouter);
 
 
 
