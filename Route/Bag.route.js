@@ -1,5 +1,5 @@
 import express from "express"
-import { AddBag, bagPatch, DeleteBagItem, GetBag, GetBagCount, UpdateBagItem } from "../controller/Bag.controller.js"
+import { AddBag, bagPatch, DeleteBagItem, GetBag, GetBagCount, UpdateBagItem } from "../Controller/Bag.controller.js"
 import { authorize } from "../MiddleWare/auth.middleware.js";
 
 const router = express.Router()

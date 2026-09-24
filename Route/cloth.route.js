@@ -8,7 +8,7 @@ import {
   getClothById,
   GetClothByType,
   searchClothes,
-} from "../controller/cloth.controller.js";
+} from "../Controller/cloth.controller.js";
 
 import { authorize } from "../MiddleWare/auth.middleware.js";
 import { upload } from "../Multer/Multer.js";
